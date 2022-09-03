@@ -1,0 +1,419 @@
+@import '/src/scss/colors';
+
+.bg-1, .bg-2, .bg-3, .bg-4 {
+    position: absolute; 
+    border-radius: 100%;
+    position: fixed;
+    overflow: hidden;
+}
+
+.bg-1 {
+    width: 64rem;
+    height: 65rem;
+    background-color: $secondary-color;
+    transform: matrix(0.72, 0.69, -0.69, 0.72, 0, 0);
+    top: -45rem;
+    left: -52rem;
+} 
+
+.bg-2 {
+    width: 15.5rem;
+    height: 17rem;
+    background-color: $secondary-color;
+    top: -11rem;
+    right: -9rem;
+    z-index: 2;
+
+    transition: all .5s ease-in-out;
+} 
+
+.bg-3 {
+    width: 42rem;
+    height: 101rem;
+    background-color: $drip-bg;
+    transform: matrix(1, 0.09, -0.09, 1, 0, 0);
+    bottom: -68rem;
+    right: -32rem;
+} 
+
+.bg-4 {
+    width: 113rem;
+    height: 101rem;
+    background-color: $aeropress-bg;
+    transform: matrix(0.37, 0.93, -0.93, 0.37, 0, 0);
+    bottom: -100rem;
+    left: -22rem;
+} 
+
+
+body{
+    background-color: $background;
+}
+
+
+div.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    footer {
+        position: absolute;
+        bottom: 1rem;
+    }
+}
+
+div.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+
+form.show-user-menu-form {
+    display: none;
+    position: fixed;
+    right: 6rem;
+    transition: all .5s ease-in-out;
+    transform: translateY(-3rem);
+
+    input { 
+        border: none;
+        border-radius: .4rem;
+        width: 7rem;
+        margin-left: .8rem;
+        padding: .5rem 1rem;
+        outline: none;
+        color: $icon-color;
+    }
+
+    div {
+        position: absolute;
+        right: 7rem;
+        top: 3.5rem;
+        color: $chemex-bg;
+        a {
+            color: $chemex-bg;
+            text-decoration: none;
+            
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+        
+    }
+
+    #sign-in {
+        position: absolute;
+        top: 3.05rem;
+        right: 0;
+        width: 6rem;
+        cursor: pointer;
+        background: none;
+        color: $icon-color;
+        font-weight: 600;
+    }
+
+}
+.show-user-menu {
+    width: 6rem;
+    height: 2.1rem;
+    border-radius: .4rem;
+    right: 6rem;
+    top: 4rem;
+
+
+
+    form.show-user-menu-form {
+        display: block;
+    }
+}
+
+#user-menu-btn {
+    position: fixed;
+    right: 1rem;
+    top: 1rem;
+    font-size: 2.3rem;
+    cursor: pointer;
+    transition: .1s;
+    color: $icon-color;
+    z-index: 3;
+
+    &:hover {
+        transform: scale(1.1);
+    }
+}
+
+header {
+    padding-top: 20vh;
+    .logo {
+        font-size: 4rem;
+        letter-spacing: -3.5px;
+        color: $main-color;
+        span {
+            color: $secondary-color;
+            font-weight: 600;
+        }
+    }
+
+    .greeting {
+        font-size: 1.5rem;
+        color: $main-color;
+        letter-spacing: 1.45px;
+        margin-top: 2.5rem;
+        font-weight: 300;
+
+        &::after {
+            content: '';
+            display: block;
+            width: 12.5rem;
+            height: .1rem;
+            margin: 0 auto;
+            background-color: $main-color;
+            margin-top: .8rem;
+        }
+    }
+}
+
+.category-container {
+    display: flex;
+    
+    div {
+        position: relative;
+        margin: 1.6rem;
+        width: 7.5rem;
+        height: 7.5rem;
+        border-radius: 2rem;
+        transition: .1s;
+
+        &:hover {
+            transform: scale(1.05);
+            cursor: pointer;
+        }
+
+        img {
+            position: absolute;
+            bottom: .8rem;
+        }
+    }
+
+    .chemex-btn {
+        background-color: $chemex-bg;
+        img {
+            height: 6rem;
+            left: 1.9rem;
+        }
+    }
+
+    .drip-btn {
+        background-color: $drip-bg;
+        img {
+            height: 5.6rem;
+            left: 1.6rem;
+        }
+    }
+
+    .aeropress-btn {
+        background-color: $aeropress-bg;
+        img {
+            height: 6.1rem;
+            left: 2.3rem;
+        }
+    }
+
+    .frenchpress-btn {
+        background-color: $french-press-bg;
+        img {
+            height: 6rem;
+            left: 1.9rem;
+        }
+    }
+}
+
+.searchbar {
+    margin-top: 1rem;
+    position: relative;
+    input {
+        border: none;
+        border-radius: 2rem;
+        width: 30rem;
+        height: 2.5rem;
+        padding: 0 1rem;
+        font-size: 1.1rem;
+        color: $icon-color;
+        outline: none;
+    }
+
+    button {
+        position: absolute;
+        right: 0;
+        top: 0;
+        border-radius: 2rem;
+        border: none;
+        padding: .3rem 0 0 0;
+        background: none;
+        width: 3rem;
+        height: 2.2rem;
+        font-size: 1.5rem;
+        color: $main-color;
+        cursor: pointer;
+    }
+}
+
+.random {
+    color: $main-color;
+    font-size: 1.4rem;
+    margin: 1rem 0;
+    cursor: pointer;
+    font-weight: 300;
+}
+
+footer {
+    color: $main-color;
+    font-size: .7rem;
+}
+
+@media screen and (max-width: 1200px) {
+    html {
+        font-size: 14px;
+    }
+}
+
+@media screen and (max-width: 930px) {
+    .bg-1, .bg-3, .bg-4 {
+        transform: scale(.7);
+    }
+    .bg-1 {
+        top: -45rem;
+        left: -40rem;
+    } 
+    
+    .bg-2 {
+        top: -10rem;
+        right: -9rem;
+    } 
+    
+    .bg-3 {
+        bottom: -65rem;
+        right: -28rem;
+    } 
+    
+    .bg-4 {
+        bottom: -82rem;
+        left: -50rem;
+    } 
+
+    .show-user-menu {
+        right: 6rem;
+        top: 4rem;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    html {
+        font-size: 13px;
+    }
+
+    .bg-3 {
+        display: none;
+    }
+
+    .bg-4 {
+        bottom: -81rem;
+        left: -34rem;
+    } 
+
+    header {
+        padding-top: 3rem;
+        
+        .logo {
+            transform: scale(.6);
+        }
+    }
+
+    .searchbar {
+        input {
+            width: 60vw;
+        }
+    }
+
+    .category-container {
+        justify-content: center;
+        width: 22rem;
+        flex-wrap: wrap;
+        div {
+            margin: 1rem;
+        }
+    }
+
+
+form.show-user-menu-form {
+    transition: all .5s ease-in-out;
+    transform: translateY(0);
+    right: unset;
+    
+    
+    
+    input { 
+        font-size: 16px;
+        border: none;
+        border-radius: .5rem;
+        width: 15rem;
+        height: 2.5rem;
+        margin-left: unset;
+        margin-bottom: 1rem;
+        padding: .5rem 1rem;
+        outline: none;
+    }
+
+    div {
+        font-size: 16px;
+        position: relative;
+        right: 1.5rem;
+        top: 1rem;
+    }
+
+    #sign-in {
+        position: relative;
+        top: -.8rem;
+        right: -5.5rem;
+        background: $background;
+    }
+
+}
+
+.show-user-menu {
+    width: 100%;
+    height: 40%;
+    border-radius: 0 0 7rem 7rem;
+    right: 0;
+    top: 0;
+    box-shadow: 0px 0px 100px 100vh rgba(98, 98, 98, 0.688);
+
+
+    form.show-user-menu-form {
+        display: flex;
+        width: 100vw;
+        height: 42vh;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+}
+}
+
+
+@media screen and (max-height: 570px) and (orientation: landscape) {
+    header {
+        padding-top: 0vh;
+    }
+
+    html {
+        font-size: 10px;
+    }
+
+    .category-container {
+        flex-wrap: nowrap;
+        width: 100%
+    }
+}
