@@ -261,11 +261,15 @@ header {
 }
 
 .random {
-    color: $main-color;
     font-size: 1.4rem;
     margin: 1rem 0;
     cursor: pointer;
     font-weight: 300;
+    
+    a {
+        color: $main-color;
+        text-decoration: none;
+    }
 }
 
 footer {
