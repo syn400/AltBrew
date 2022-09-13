@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom"
+import { React, useState, useRef, useEffect } from 'react'
 import './recipe-list.scss';
 import chemex from '../../assets/chemex.svg';
 import frenchpress from '../../assets/french-press.svg';
@@ -8,7 +9,25 @@ import turtle from '../../assets/turtle.svg';
 import rabbit from '../../assets/rabbit.svg';
 import snail from '../../assets/snail.svg';
 
+
+
 export const RecipeList = () => {
+
+    const [toggleMenu, toggleMenuSet] = useState(false);
+    const btnRef = useRef();
+    const menuRef = useRef();
+
+    useEffect(()=>{
+        const clickOutside = e => {
+            if(e.path[0] !== btnRef.current && !menuRef.current.contains(e.target)) {
+                toggleMenuSet(false)
+            }
+        }
+        document.body.addEventListener('click', clickOutside);
+
+        return () => document.body.removeEventListener('click', clickOutside);
+    })
+
     return (
         <div className="container">
         <div className="content">
@@ -27,6 +46,7 @@ export const RecipeList = () => {
                 <p>Random <i className="fa-solid fa-mug-hot"></i></p>
             </form>
             <section className="list-content" >
+
                 <ul className="recipe-list">
                     <li className="recipe">
                         <div className="recipe-info">
@@ -49,12 +69,11 @@ export const RecipeList = () => {
                         <h2>title</h2>
                         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nam, saepe quos? Ex aspernatur</p>
                     </li>
-
                 </ul>
                 
-                <div className="filters mobile">
-                    <div className="mobile-show">
-                        <p>Filters and sort</p>
+                <div ref={menuRef} className={toggleMenu ? "filters" : "filters mobile"}>
+                    <div ref={btnRef} className="mobile-show" onClick={()=>toggleMenuSet(!toggleMenu)}>
+                        <p>{toggleMenu ? 'Save filters' : 'Filters and sort' }</p>
                     </div>
                     <div className="content mobile">
                         <div className="bean-roast">
