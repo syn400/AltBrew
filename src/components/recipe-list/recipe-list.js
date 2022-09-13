@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { React, useState, useRef, useEffect } from 'react'
+import { React, useState } from 'react'
 import './recipe-list.scss';
 import chemex from '../../assets/chemex.svg';
 import frenchpress from '../../assets/french-press.svg';
@@ -14,19 +14,6 @@ import snail from '../../assets/snail.svg';
 export const RecipeList = () => {
 
     const [toggleMenu, toggleMenuSet] = useState(false);
-    const btnRef = useRef();
-    const menuRef = useRef();
-
-    useEffect(()=>{
-        const clickOutside = e => {
-            if(e.path[0] !== btnRef.current && !menuRef.current.contains(e.target)) {
-                toggleMenuSet(false)
-            }
-        }
-        document.body.addEventListener('click', clickOutside);
-
-        return () => document.body.removeEventListener('click', clickOutside);
-    })
 
     return (
         <div className="container">
@@ -71,8 +58,8 @@ export const RecipeList = () => {
                     </li>
                 </ul>
                 
-                <div ref={menuRef} className={toggleMenu ? "filters" : "filters mobile"}>
-                    <div ref={btnRef} className="mobile-show" onClick={()=>toggleMenuSet(!toggleMenu)}>
+                <div className={toggleMenu ? "filters" : "filters mobile"}>
+                    <div className="mobile-show" onClick={()=>toggleMenuSet(!toggleMenu)}>
                         <p>{toggleMenu ? 'Save filters' : 'Filters and sort' }</p>
                     </div>
                     <div className="content mobile">

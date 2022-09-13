@@ -1,16 +1,29 @@
-import { React, useState } from 'react';
+import { React, useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 export const Signin = () => {
 
     const [toggleMenu, toggleMenuSet] = useState(false);
+    const btnRef = useRef();
+    const menuRef = useRef();
+
+    useEffect(()=>{
+        const clickOutside = e => {
+            if(e.path[0] !== btnRef.current && !menuRef.current.contains(e.target)) {
+                toggleMenuSet(false)
+            }
+        }
+        document.body.addEventListener('mousedown', clickOutside);
+
+        return () => document.body.removeEventListener('mousedown', clickOutside);
+    })
 
     return (
         <>
             <div className="bg">
                 <span className="bg-1"></span>
-                <i  className={toggleMenu ? "fa-solid fa-xmark" : "fa-solid fa-circle-user"} id="user-menu-btn" onClick={()=>toggleMenuSet(!toggleMenu)}/>
-                <span className={toggleMenu ? 'bg-2 show-user-menu' : 'bg-2'} id="user-menu">
+                <i ref={btnRef} className={toggleMenu ? "fa-solid fa-xmark" : "fa-solid fa-circle-user"} id="user-menu-btn" onClick={()=>toggleMenuSet(!toggleMenu)}/>
+                <span ref={menuRef} className={toggleMenu ? 'bg-2 show-user-menu' : 'bg-2'} id="user-menu">
                     <form className="show-user-menu-form" id="signInForm">
                         <input type="text" id="login" placeholder="Username"/>
                         <input type="password" id="password" placeholder="Password"/>
