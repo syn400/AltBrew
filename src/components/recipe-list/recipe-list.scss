@@ -163,6 +163,7 @@ header.page-2 {
         border-radius: 1rem;
         padding: 1rem;
         color: $icon-color;
+        transition: all 1s;
         
         .content {
             display: flex;
@@ -182,6 +183,10 @@ header.page-2 {
             justify-content: center;
             gap: .5rem;
             font-size: 1.3rem;
+            transition: all .15s;
+            & div:hover {
+                transform: translateY(-.2rem);
+            }
         }
         label {
             display: flex;
