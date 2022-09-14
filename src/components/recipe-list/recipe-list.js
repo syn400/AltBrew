@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { React, useState } from 'react'
+import { React, useEffect, useState } from 'react'
 import './recipe-list.scss';
 import chemex from '../../assets/chemex.svg';
 import frenchpress from '../../assets/french-press.svg';
@@ -8,12 +8,29 @@ import aeropress from '../../assets/aeropress.svg';
 import turtle from '../../assets/turtle.svg';
 import rabbit from '../../assets/rabbit.svg';
 import snail from '../../assets/snail.svg';
-
+import app from '../../firebase';
+import { getFirestore, getDocs, collection } from "firebase/firestore";
 
 
 export const RecipeList = () => {
 
     const [toggleMenu, toggleMenuSet] = useState(false);
+    const [recipesArr, setRecipesArr] = useState([]);
+
+    const db = getFirestore(app);
+
+    function getRecipes () {
+            const colRef = collection(db, 'recipes');
+            getDocs(colRef).then(response => {
+                const recipes = response.docs.map(doc => ({
+                    data: doc.data(),
+                    id: doc.id
+                }))
+                setRecipesArr(recipes)
+            })
+    }
+
+    getRecipes();
 
     return (
         <div className="container">
@@ -33,31 +50,46 @@ export const RecipeList = () => {
                 <p>Random <i className="fa-solid fa-mug-hot"></i></p>
             </form>
             <section className="list-content" >
-
                 <ul className="recipe-list">
-                    <li className="recipe">
-                        <div className="recipe-info">
-                            <p className="username">
-                                <i className="fa-solid fa-user"></i><span>user</span>
-                            </p>
+                {recipesArr.map( el => {
+                    function categoryImage () {
+                        switch (el.data.category) {
+                            case "aeropress":
+                                return aeropress
+                            case "chemex":
+                                return chemex
+                            case "frenchpress":
+                                return frenchpress
+                            case "drip":
+                                return drip
+                            default:
+                                return chemex
+                    }}
+                    return (
+                            <li key={el.id} className="recipe">
+                                <div className="recipe-info">
+                                    <p className="username">
+                                        <i className="fa-solid fa-user"></i><span>{el.data.author}</span>
+                                    </p>
 
-                            <div className="info">
-                                <div className="likes">
-                                    <i className="fa-regular fa-heart"></i>
-                                    <span>1250</span>
+                                    <div className="info">
+                                        <div className="likes">
+                                            <i className="fa-regular fa-heart"></i>
+                                            <span> {el.data.likes}</span>
+                                        </div>
+                                        <div className="time">
+                                            <p>{el.data.time}</p>
+                                        </div>
+                                        <img src={categoryImage()} alt={el.data.category}/>
+                                    </div>
                                 </div>
-                                <div className="time">
-                                    <p>1:20</p>
-                                </div>
-                                <img src={chemex} alt="chemex"/>
-                            </div>
-                        </div>
 
-                        <h2>title</h2>
-                        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nam, saepe quos? Ex aspernatur</p>
-                    </li>
+                                <h2>{el.data.title}</h2>
+                                <p>{el.data.description}</p>
+                            </li>
+                    )
+                })}
                 </ul>
-                
                 <div className={toggleMenu ? "filters" : "filters mobile"}>
                     <div className="mobile-show" onClick={()=>toggleMenuSet(!toggleMenu)}>
                         <p>{toggleMenu ? 'Save filters' : 'Filters and sort' }</p>

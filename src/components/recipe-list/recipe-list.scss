@@ -170,6 +170,10 @@ header.page-2 {
             flex-direction: column;
             justify-content: center;
             transform: scale(.9);
+
+            & > div {
+                width: 100%;
+            }
         }
 
         h2 {        
