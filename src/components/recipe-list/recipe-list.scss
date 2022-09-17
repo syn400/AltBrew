@@ -52,11 +52,15 @@ header.page-2 {
     .recipe-list {
         position: relative;
         margin-right: 1.1rem;
-        display: grid;
-        grid-template-columns: auto auto auto;
         gap: 1.5rem;
         overflow-y: auto;
         height: 33rem;
+        width: 60.5rem;
+
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        padding-left: .45rem;
 
         &::-webkit-scrollbar {
             width: 6px;
@@ -302,7 +306,7 @@ header.page-2 {
 @media screen and (max-width: 1435px) {
     .list-content {
         .recipe-list {
-            grid-template-columns: auto auto;
+            width: 40.03rem;
         }
     }
 }
@@ -334,7 +338,7 @@ header.page-2 {
 
             position: absolute;
             top: -4rem;
-            height: calc(55vh + 3rem);
+            height: calc(62vh + 4.3rem);
             padding: 0;
             display: flex;
             flex-direction: column;
@@ -361,8 +365,8 @@ header.page-2 {
             }
         }
         .recipe-list {
-            grid-template-columns: auto auto;
-            height: 66vh;
+            width: calc(80vw + 2rem);
+            height: 62vh;
             margin: 0;
 
             .recipe {
@@ -405,12 +409,11 @@ header.page-2 {
     .list-content {
         .filters  {
             border-radius: 1.7rem;
-            height: calc(57vh + 3rem);
+            height: calc(62vh + 5.3rem);
             width: calc(80vw + 1.55rem);
         }
 
         .recipe-list {
-            grid-template-columns: auto;
             height: 62vh;
             
             .recipe{
