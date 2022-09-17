@@ -5,8 +5,8 @@ import { RecipeList } from '../recipe-list/recipe-list';
 export const RecipeListPage = () => {
     return (
         <>
-            <Signin />
-            <RecipeList />
+            <Signin page='recipe-list'/>
+            <RecipeList/>
         </>
     )
   }

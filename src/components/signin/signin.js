@@ -1,7 +1,7 @@
 import { React, useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
-export const Signin = () => {
+export const Signin = (props) => {
 
     const [toggleMenu, toggleMenuSet] = useState(false);
     const btnRef = useRef();
@@ -17,25 +17,48 @@ export const Signin = () => {
 
         return () => document.body.removeEventListener('mousedown', clickOutside);
     })
-
-    return (
-        <>
-            <div className="bg">
-                <span className="bg-1"></span>
-                <i ref={btnRef} className={toggleMenu ? "fa-solid fa-xmark" : "fa-solid fa-circle-user"} id="user-menu-btn" onClick={()=>toggleMenuSet(!toggleMenu)}/>
-                <span ref={menuRef} className={toggleMenu ? 'bg-2 show-user-menu' : 'bg-2'} id="user-menu">
-                    <form className="show-user-menu-form" id="signInForm">
-                        <input type="text" id="login" placeholder="Username"/>
-                        <input type="password" id="password" placeholder="Password"/>
-                        <div>
-                            <Link to='/register' id="register">Register</Link> or
-                        </div>
-                        <input type="submit" id="sign-in" value="Sign In"/>
-                    </form>
-                </span>
-                <span className="bg-3"></span>
-                <span className="bg-4"></span>
-            </div>
-        </>
-    );
+    
+    if(props.page === 'recipe-list') {
+        return (
+            <>
+                <div className="bg">
+                    <span className="bg-1 page-2"></span>
+                    <i ref={btnRef} className={toggleMenu ? "fa-solid fa-xmark" : "fa-solid fa-circle-user"} id="user-menu-btn" onClick={()=>toggleMenuSet(!toggleMenu)}/>
+                    <span ref={menuRef} className={toggleMenu ? 'bg-2 page-2 show-user-menu' : 'bg-2 page-2'} id="user-menu">
+                        <form className="show-user-menu-form" id="signInForm">
+                            <input type="text" id="login" placeholder="Username"/>
+                            <input type="password" id="password" placeholder="Password"/>
+                            <div>
+                                <Link to='/register' id="register">Register</Link> or
+                            </div>
+                            <input type="submit" id="sign-in" value="Sign In"/>
+                        </form>
+                    </span>
+                    <span className="bg-3 page-2"></span>
+                    <span className="bg-4 page-2"></span>
+                </div>
+            </>
+        )
+    } else {
+        return (
+            <>
+                <div className="bg">
+                    <span className="bg-1"></span>
+                    <i ref={btnRef} className={toggleMenu ? "fa-solid fa-xmark" : "fa-solid fa-circle-user"} id="user-menu-btn" onClick={()=>toggleMenuSet(!toggleMenu)}/>
+                    <span ref={menuRef} className={toggleMenu ? 'bg-2 show-user-menu' : 'bg-2'} id="user-menu">
+                        <form className="show-user-menu-form" id="signInForm">
+                            <input type="text" id="login" placeholder="Username"/>
+                            <input type="password" id="password" placeholder="Password"/>
+                            <div>
+                                <Link to='/register' id="register">Register</Link> or
+                            </div>
+                            <input type="submit" id="sign-in" value="Sign In"/>
+                        </form>
+                    </span>
+                    <span className="bg-3"></span>
+                    <span className="bg-4"></span>
+                </div>
+            </>
+        )
+    }
   }

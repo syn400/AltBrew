@@ -30,7 +30,52 @@ export const RecipeList = () => {
             })
     }
 
-    getRecipes();
+    let generateList;
+
+    if(recipesArr.length !== 0) {
+        generateList = recipesArr.map( el => {
+        function categoryImage () {
+            switch (el.data.category) {
+                case "aeropress":
+                    return aeropress
+                case "chemex":
+                    return chemex
+                case "frenchpress":
+                    return frenchpress
+                case "drip":
+                    return drip
+                default:
+                    return chemex
+        }}
+        return (
+                <li key={el.id} className="recipe">
+                    <div className="recipe-info">
+                        <p className="username">
+                            <i className="fa-solid fa-user"></i><span>{el.data.author}</span>
+                        </p>
+
+                        <div className="info">
+                            <div className="likes">
+                                <i className="fa-regular fa-heart"></i>
+                                <span> {el.data.likes}</span>
+                            </div>
+                            <div className="time">
+                                <p>{el.data.time}</p>
+                            </div>
+                            <img src={categoryImage()} alt={el.data.category}/>
+                        </div>
+                    </div>
+
+                    <h2>{el.data.title}</h2>
+                    <p>{el.data.description}</p>
+                </li>
+        )
+    })} else {
+        generateList = (
+            <p>Nothing found</p>
+        )
+    }
+            // getRecipes();
 
     return (
         <div className="container">
@@ -41,8 +86,10 @@ export const RecipeList = () => {
                 </Link>
             </header>
             <form className="searchbar page-2">
-                <input type="search"/>
-                <button>
+                <input/>
+                <button onClick={(e)=>{
+                    e.preventDefault()
+                    getRecipes()}}>
                     <i className="fa-solid fa-magnifying-glass"></i>
                 </button>
             </form>
@@ -51,44 +98,7 @@ export const RecipeList = () => {
             </form>
             <section className="list-content" >
                 <ul className="recipe-list">
-                {recipesArr.map( el => {
-                    function categoryImage () {
-                        switch (el.data.category) {
-                            case "aeropress":
-                                return aeropress
-                            case "chemex":
-                                return chemex
-                            case "frenchpress":
-                                return frenchpress
-                            case "drip":
-                                return drip
-                            default:
-                                return chemex
-                    }}
-                    return (
-                            <li key={el.id} className="recipe">
-                                <div className="recipe-info">
-                                    <p className="username">
-                                        <i className="fa-solid fa-user"></i><span>{el.data.author}</span>
-                                    </p>
-
-                                    <div className="info">
-                                        <div className="likes">
-                                            <i className="fa-regular fa-heart"></i>
-                                            <span> {el.data.likes}</span>
-                                        </div>
-                                        <div className="time">
-                                            <p>{el.data.time}</p>
-                                        </div>
-                                        <img src={categoryImage()} alt={el.data.category}/>
-                                    </div>
-                                </div>
-
-                                <h2>{el.data.title}</h2>
-                                <p>{el.data.description}</p>
-                            </li>
-                    )
-                })}
+                {generateList}
                 </ul>
                 <div className={toggleMenu ? "filters" : "filters mobile"}>
                     <div className="mobile-show" onClick={()=>toggleMenuSet(!toggleMenu)}>
