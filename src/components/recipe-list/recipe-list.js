@@ -9,7 +9,7 @@ import turtle from '../../assets/turtle.svg';
 import rabbit from '../../assets/rabbit.svg';
 import snail from '../../assets/snail.svg';
 import app from '../../firebase';
-import { getFirestore, getDocs, collection } from "firebase/firestore";
+import { getFirestore, getDocs, collection, query, where, limit, descending, orderBy, onSnapshot, getDoc } from "firebase/firestore";
 
 
 export const RecipeList = () => {
@@ -19,63 +19,68 @@ export const RecipeList = () => {
 
     const db = getFirestore(app);
 
-    function getRecipes () {
+    const getRecipes = async(sorting) => {
             const colRef = collection(db, 'recipes');
-            getDocs(colRef).then(response => {
-                const recipes = response.docs.map(doc => ({
-                    data: doc.data(),
-                    id: doc.id
-                }))
-                setRecipesArr(recipes)
-            })
+
+            if(sorting == null) {
+                const getDocuments = onSnapshot(colRef, (snapshot) => {
+                    setRecipesArr(snapshot.docs.map((doc) => ({ data: doc.data(), id: doc.id})))
+                });
+                return getDocuments;
+            } else {
+                const q = query(colRef, sorting);
+                const getDocuments = onSnapshot(q, (snapshot) => {
+                    setRecipesArr(snapshot.docs.map((doc) => ({ data: doc.data(), id: doc.id})))
+                });
+                return getDocuments;
+            }
+
     }
+    
+    useEffect(()=>{
+        getRecipes();
+    }, [])
 
-    let generateList;
 
-    if(recipesArr.length !== 0) {
-        generateList = recipesArr.map( el => {
-        function categoryImage () {
-            switch (el.data.category) {
-                case "aeropress":
-                    return aeropress
-                case "chemex":
-                    return chemex
-                case "frenchpress":
-                    return frenchpress
-                case "drip":
-                    return drip
-                default:
-                    return chemex
-        }}
-        return (
-                <li key={el.id} className="recipe">
-                    <div className="recipe-info">
-                        <p className="username">
-                            <i className="fa-solid fa-user"></i><span>{el.data.author}</span>
-                        </p>
-
-                        <div className="info">
-                            <div className="likes">
-                                <i className="fa-regular fa-heart"></i>
-                                <span> {el.data.likes}</span>
+    function generateList(){
+            return recipesArr.map( el => {
+                function categoryImage () {
+                    switch (el.data.category) {
+                        case "aeropress":
+                            return aeropress
+                        case "chemex":
+                            return chemex
+                        case "frenchpress":
+                            return frenchpress
+                        case "drip":
+                            return drip
+                        default:
+                            return chemex
+                }}
+                return (
+                        <li key={el.id} className="recipe">
+                            <div className="recipe-info">
+                                <p className="username">
+                                    <i className="fa-solid fa-user"></i><span>{el.data.author}</span>
+                                </p>
+        
+                                <div className="info">
+                                    <div className="likes">
+                                        <i className="fa-regular fa-heart"></i>
+                                        <span> {el.data.likes}</span>
+                                    </div>
+                                    <div className="time">
+                                        <p>{el.data.time}</p>
+                                    </div>
+                                    <img src={categoryImage()} alt={el.data.category}/>
+                                </div>
                             </div>
-                            <div className="time">
-                                <p>{el.data.time}</p>
-                            </div>
-                            <img src={categoryImage()} alt={el.data.category}/>
-                        </div>
-                    </div>
-
-                    <h2>{el.data.title}</h2>
-                    <p>{el.data.description}</p>
-                </li>
-        )
-    })} else {
-        generateList = (
-            <p>Nothing found</p>
-        )
-    }
-            // getRecipes();
+        
+                            <h2>{el.data.title}</h2>
+                            <p>{el.data.description}</p>
+                        </li>
+                    )
+            })}
 
     return (
         <div className="container">
@@ -87,9 +92,7 @@ export const RecipeList = () => {
             </header>
             <form className="searchbar page-2">
                 <input/>
-                <button onClick={(e)=>{
-                    e.preventDefault()
-                    getRecipes()}}>
+                <button>
                     <i className="fa-solid fa-magnifying-glass"></i>
                 </button>
             </form>
@@ -98,7 +101,7 @@ export const RecipeList = () => {
             </form>
             <section className="list-content" >
                 <ul className="recipe-list">
-                {generateList}
+                {generateList()}
                 </ul>
                 <div className={toggleMenu ? "filters" : "filters mobile"}>
                     <div className="mobile-show" onClick={()=>toggleMenuSet(!toggleMenu)}>
@@ -171,19 +174,19 @@ export const RecipeList = () => {
     
                             <div className="sort-checkbox">
                                 <div>
-                                    <input type="checkbox" id="newest"/>
+                                    <input type="checkbox" id="newest" onChange={()=> getRecipes(orderBy('posted', 'desc'))}/>
                                     <label htmlFor="newest">
                                         <i className="fa-solid fa-arrow-up"></i> Newest
                                     </label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" id="oldest"/>
+                                    <input type="checkbox" id="oldest" onChange={()=> getRecipes(orderBy('posted', 'asc'))}/>
                                     <label htmlFor="oldest">
                                         <i className="fa-solid fa-arrow-down"></i> Oldest
                                     </label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" id="love"/>
+                                    <input type="checkbox" id="love" defaultChecked onChange={()=> getRecipes(orderBy('likes', 'desc'))}/>
                                     <label htmlFor="love">
                                         <i className="fa-solid fa-heart"></i> Most loved
                                     </label>
