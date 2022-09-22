@@ -24,12 +24,14 @@ export const RecipeList = () => {
     const likesBtn = useRef();
 
 
+
     const getRecipes = async(sorting) => {
             const colRef = collection(db, 'recipes');
 
             if(sorting == null) {
                 const getDocuments = onSnapshot(colRef, (snapshot) => {
-                    setRecipesArr(snapshot.docs.map((doc) => ({ data: doc.data(), id: doc.id})))
+                    const docArr = snapshot.docs.map((doc) => ( { data: doc.data(), id: doc.id}));
+                    setRecipesArr(docArr.sort(() => Math.random() - 0.5));
                 });
                 return getDocuments;
             } else {
@@ -40,8 +42,6 @@ export const RecipeList = () => {
                 return getDocuments;
             }
     }
-
-
     
     useEffect(()=>{
         getRecipes();
@@ -103,7 +103,12 @@ export const RecipeList = () => {
                     <i className="fa-solid fa-magnifying-glass"></i>
                 </button>
             </form>
-            <form className="random page-2">
+            <form onClick={() => {
+                    newestBtn.current.checked = false;
+                    oldestBtn.current.checked = false;
+                    likesBtn.current.checked = false;
+                    getRecipes();
+                }} className="random page-2">
                 <p>Random <i className="fa-solid fa-mug-hot"></i></p>
             </form>
             <section className="list-content" >
@@ -181,19 +186,19 @@ export const RecipeList = () => {
 
                             <div className="sort-checkbox">
                                 <div>
-                                    <input type="radio" name='sorting' ref={newestBtn.current} id="newest" onChange={()=> getRecipes(orderBy('posted', 'desc'))}/>
+                                    <input type="radio" name='sorting' ref={newestBtn} id="newest" onChange={()=> getRecipes(orderBy('posted', 'desc'))}/>
                                     <label htmlFor="newest">
                                         <i className="fa-solid fa-arrow-up"></i> Newest
                                     </label>
                                 </div>
                                 <div>
-                                    <input type="radio" name='sorting' ref={oldestBtn.current} id="oldest" onChange={()=> getRecipes(orderBy('posted', 'asc'))}/>
+                                    <input type="radio" name='sorting' ref={oldestBtn} id="oldest" onChange={()=> getRecipes(orderBy('posted', 'asc'))}/>
                                     <label htmlFor="oldest">
                                         <i className="fa-solid fa-arrow-down"></i> Oldest
                                     </label>
                                 </div>
                                 <div>
-                                    <input type="radio" name='sorting' ref={likesBtn.current} id="love" onChange={()=> getRecipes(orderBy('likes', 'desc'))}/>
+                                    <input type="radio" name='sorting' ref={likesBtn} id="love" onChange={()=> getRecipes(orderBy('likes', 'desc'))}/>
                                     <label htmlFor="love">
                                         <i className="fa-solid fa-heart"></i> Most loved
                                     </label>

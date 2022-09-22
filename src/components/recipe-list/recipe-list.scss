@@ -39,6 +39,12 @@ header.page-2 {
 .random.page-2 {
     p {
         color: $main-color;
+        transition: transform .3s;
+
+        &:hover {
+            transform: scale(1.04);
+            text-decoration: underline;
+        }
     }
 }
 
