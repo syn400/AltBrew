@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { React, useEffect, useState } from 'react'
+import { React, useEffect, useState, useRef } from 'react'
 import './recipe-list.scss';
 import chemex from '../../assets/chemex.svg';
 import frenchpress from '../../assets/french-press.svg';
@@ -9,7 +9,7 @@ import turtle from '../../assets/turtle.svg';
 import rabbit from '../../assets/rabbit.svg';
 import snail from '../../assets/snail.svg';
 import app from '../../firebase';
-import { getFirestore, getDocs, collection, query, where, limit, descending, orderBy, onSnapshot, getDoc } from "firebase/firestore";
+import { getFirestore, collection, query, orderBy, onSnapshot } from "firebase/firestore";
 
 
 export const RecipeList = () => {
@@ -18,6 +18,11 @@ export const RecipeList = () => {
     const [recipesArr, setRecipesArr] = useState([]);
 
     const db = getFirestore(app);
+
+    const newestBtn = useRef();
+    const oldestBtn = useRef();
+    const likesBtn = useRef();
+
 
     const getRecipes = async(sorting) => {
             const colRef = collection(db, 'recipes');
@@ -34,12 +39,14 @@ export const RecipeList = () => {
                 });
                 return getDocuments;
             }
-
     }
+
+
     
     useEffect(()=>{
         getRecipes();
-    }, [])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
 
     function generateList(){
@@ -171,27 +178,26 @@ export const RecipeList = () => {
                         </div>
                         <div className="sort-by">
                             <h2>Sort by</h2>
-    
+
                             <div className="sort-checkbox">
                                 <div>
-                                    <input type="checkbox" id="newest" onChange={()=> getRecipes(orderBy('posted', 'desc'))}/>
+                                    <input type="radio" name='sorting' ref={newestBtn.current} id="newest" onChange={()=> getRecipes(orderBy('posted', 'desc'))}/>
                                     <label htmlFor="newest">
                                         <i className="fa-solid fa-arrow-up"></i> Newest
                                     </label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" id="oldest" onChange={()=> getRecipes(orderBy('posted', 'asc'))}/>
+                                    <input type="radio" name='sorting' ref={oldestBtn.current} id="oldest" onChange={()=> getRecipes(orderBy('posted', 'asc'))}/>
                                     <label htmlFor="oldest">
                                         <i className="fa-solid fa-arrow-down"></i> Oldest
                                     </label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" id="love" defaultChecked onChange={()=> getRecipes(orderBy('likes', 'desc'))}/>
+                                    <input type="radio" name='sorting' ref={likesBtn.current} id="love" onChange={()=> getRecipes(orderBy('likes', 'desc'))}/>
                                     <label htmlFor="love">
                                         <i className="fa-solid fa-heart"></i> Most loved
                                     </label>
                                 </div>
-                                 
                             </div>
                         </div>
                         <div>
