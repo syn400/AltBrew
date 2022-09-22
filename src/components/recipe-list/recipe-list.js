@@ -16,14 +16,13 @@ export const RecipeList = () => {
 
     const [toggleMenu, toggleMenuSet] = useState(false);
     const [recipesArr, setRecipesArr] = useState([]);
+    const [searchBar, setSearchBar] = useState('');
 
     const db = getFirestore(app);
 
     const newestBtn = useRef();
     const oldestBtn = useRef();
     const likesBtn = useRef();
-
-
 
     const getRecipes = async(sorting) => {
             const colRef = collection(db, 'recipes');
@@ -50,44 +49,47 @@ export const RecipeList = () => {
 
 
     function generateList(){
-            return recipesArr.map( el => {
-                function categoryImage () {
-                    switch (el.data.category) {
-                        case "aeropress":
-                            return aeropress
-                        case "chemex":
-                            return chemex
-                        case "frenchpress":
-                            return frenchpress
-                        case "drip":
-                            return drip
-                        default:
-                            return chemex
-                }}
-                return (
-                        <li key={el.id} className="recipe">
-                            <div className="recipe-info">
-                                <p className="username">
-                                    <i className="fa-solid fa-user"></i><span>{el.data.author}</span>
-                                </p>
-        
-                                <div className="info">
-                                    <div className="likes">
-                                        <i className="fa-regular fa-heart"></i>
-                                        <span> {el.data.likes}</span>
+                const searchArr = recipesArr.filter(e => e.data.title.toLowerCase().includes(searchBar.toLowerCase()) || e.data.description.toLowerCase().includes(searchBar.toLowerCase()) || e.data.author.toLowerCase().includes(searchBar.toLowerCase()))
+
+                return (searchBar !== '' ? searchArr : recipesArr).map( el => {
+                    function categoryImage () {
+                        switch (el.data.category) {
+                            case "aeropress":
+                                return aeropress
+                            case "chemex":
+                                return chemex
+                            case "frenchpress":
+                                return frenchpress
+                            case "drip":
+                                return drip
+                            default:
+                                return chemex
+                    }}
+                    return (
+                            <li key={el.id} className="recipe">
+                                <div className="recipe-info">
+                                    <p className="username">
+                                        <i className="fa-solid fa-user"></i><span>{el.data.author}</span>
+                                    </p>
+            
+                                    <div className="info">
+                                        <div className="likes">
+                                            <i className="fa-regular fa-heart"></i>
+                                            <span> {el.data.likes}</span>
+                                        </div>
+                                        <div className="time">
+                                            <p>{el.data.time}</p>
+                                        </div>
+                                        <img src={categoryImage()} alt={el.data.category}/>
                                     </div>
-                                    <div className="time">
-                                        <p>{el.data.time}</p>
-                                    </div>
-                                    <img src={categoryImage()} alt={el.data.category}/>
                                 </div>
-                            </div>
-        
-                            <h2>{el.data.title}</h2>
-                            <p>{el.data.description}</p>
-                        </li>
-                    )
-            })}
+            
+                                <h2>{el.data.title}</h2>
+                                <p>{el.data.description}</p>
+                            </li>
+                        )
+                })
+            }
 
     return (
         <div className="container">
@@ -98,10 +100,7 @@ export const RecipeList = () => {
                 </Link>
             </header>
             <form className="searchbar page-2">
-                <input/>
-                <button>
-                    <i className="fa-solid fa-magnifying-glass"></i>
-                </button>
+                <input onChange={(e)=>setSearchBar(e.target.value)}/>
             </form>
             <form onClick={() => {
                     newestBtn.current.checked = false;
