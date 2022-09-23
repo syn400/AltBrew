@@ -17,12 +17,14 @@ export const RecipeList = () => {
     const [toggleMenu, toggleMenuSet] = useState(false);
     const [recipesArr, setRecipesArr] = useState([]);
     const [searchBar, setSearchBar] = useState('');
+    const [filters, setFilters] = useState([]);
 
     const db = getFirestore(app);
 
     const newestBtn = useRef();
     const oldestBtn = useRef();
     const likesBtn = useRef();
+
 
     const getRecipes = async(sorting) => {
             const colRef = collection(db, 'recipes');
@@ -46,12 +48,30 @@ export const RecipeList = () => {
         getRecipes();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+    
+    function setFilter(el, name) {
+        if(el.checked) {
+            setFilters(prvState => [...prvState, name])
+        } else {
+            setFilters(prvState => prvState.filter(e => e !== name))
+        }
+    }
 
 
     function generateList(){
-                const searchArr = recipesArr.filter(e => e.data.title.toLowerCase().includes(searchBar.toLowerCase()) || e.data.description.toLowerCase().includes(searchBar.toLowerCase()) || e.data.author.toLowerCase().includes(searchBar.toLowerCase()))
+                let filteredArr = [];
 
-                return (searchBar !== '' ? searchArr : recipesArr).map( el => {
+                if(filters.length !== 0) {
+                    recipesArr.forEach(e => {
+                        return filters.every(el => Object.values(e.data).includes(el)) ? filteredArr.push(e) : null;
+                    })
+                } else {
+                    filteredArr = [...recipesArr]
+                }
+                
+                const searchArr = filteredArr.filter(e => e.data.title.toLowerCase().includes(searchBar.toLowerCase()) || e.data.description.toLowerCase().includes(searchBar.toLowerCase()) || e.data.author.toLowerCase().includes(searchBar.toLowerCase()));
+
+                return (searchBar !== '' ? searchArr : filteredArr).map( el => {
                     function categoryImage () {
                         switch (el.data.category) {
                             case "aeropress":
@@ -65,7 +85,8 @@ export const RecipeList = () => {
                             default:
                                 return chemex
                     }}
-                    return (
+
+                        return (
                             <li key={el.id} className="recipe">
                                 <div className="recipe-info">
                                     <p className="username">
@@ -124,25 +145,25 @@ export const RecipeList = () => {
     
                             <div className="roast-checkbox">
                                 <div>
-                                    <input type="checkbox" id="light-roast"/>
+                                    <input type="checkbox"  onChange={(e)=>setFilter(e.target, 'light')} id="light-roast"/>
                                     <label className="l-roast" htmlFor="light-roast">
                                         <span className="bean"></span> Light
                                     </label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" id="medium-roast"/>
+                                    <input type="checkbox" onChange={(e)=>setFilter(e.target, 'medium')} id="medium-roast"/>
                                     <label className="m-roast" htmlFor="medium-roast">
                                         <span className="bean"></span> Medium
                                     </label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" id="medium-dark-roast"/>
+                                    <input type="checkbox" onChange={(e)=>setFilter(e.target, 'medium/dark')} id="medium-dark-roast"/>
                                     <label className="md-roast" htmlFor="medium-dark-roast">
                                         <span className="bean"></span> Medium/Dark
                                     </label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" id="dark-roast"/>
+                                    <input type="checkbox" onChange={(e)=>setFilter(e.target, 'dark')} id="dark-roast"/>
                                     <label className="d-roast" htmlFor="dark-roast">
                                         <span className="bean"></span> Dark
                                     </label>
@@ -155,25 +176,25 @@ export const RecipeList = () => {
     
                             <div className="method-checkbox">
                                 <div>
-                                    <input type="checkbox" id="chemex-checkbox"/>
+                                    <input type="checkbox"  onChange={(e)=>setFilter(e.target, 'chemex')} id="chemex-checkbox"/>
                                     <label htmlFor="chemex-checkbox">
                                         <img src={chemex} alt="chemex"/>
                                     </label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" id="drip-checkbox"/>
+                                    <input type="checkbox" onChange={(e)=>setFilter(e.target, 'drip')} id="drip-checkbox"/>
                                     <label htmlFor="drip-checkbox">
                                         <img src={drip} alt="drip"/>
                                     </label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" id="aeropress-checkbox"/>
+                                    <input type="checkbox" onChange={(e)=>setFilter(e.target, 'aeropress')} id="aeropress-checkbox"/>
                                     <label htmlFor="aeropress-checkbox">
                                         <img src={aeropress} alt="aeropress"/>
                                     </label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" id="french-p-checkbox"/>
+                                    <input type="checkbox"  onChange={(e)=>setFilter(e.target, 'frenchpress')} id="french-p-checkbox"/>
                                     <label htmlFor="french-p-checkbox">
                                         <img src={frenchpress} alt="French press"/>
                                     </label>
@@ -209,19 +230,19 @@ export const RecipeList = () => {
     
                             <div className="time-checkbox">
                                 <div>
-                                    <input type="checkbox" id="rabbit"/>
+                                    <input type="radio" name='time'  id="rabbit"/>
                                     <label htmlFor="rabbit">
                                         <img src={rabbit} alt="fast"/> 1 - 2 min
                                     </label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" id="turtle"/>
+                                    <input type="radio" name='time'  id="turtle"/>
                                     <label htmlFor="turtle">
                                         <img src={turtle} alt="slow"/> 2 - 4 min
                                     </label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" id="snail"/>
+                                    <input type="radio" name='time'  id="snail"/>
                                     <label htmlFor="snail">
                                         <img src={snail} alt="slowest"/> + 4 min
                                     </label>
