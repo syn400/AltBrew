@@ -65,7 +65,7 @@ header.page-2 {
 
         display: flex;
         flex-wrap: wrap;
-        justify-content: flex-start;
+        align-content: flex-start;
         padding-left: .45rem;
 
         &::-webkit-scrollbar {
