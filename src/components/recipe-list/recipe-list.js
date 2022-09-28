@@ -17,14 +17,19 @@ export const RecipeList = () => {
     const [toggleMenu, toggleMenuSet] = useState(false);
     const [recipesArr, setRecipesArr] = useState([]);
     const [searchBar, setSearchBar] = useState('');
-    const [filters, setFilters] = useState([]);
-    const [time, setTime] = useState();
+    const [time, setTime] = useState([]);
+    const [method, setMethod] = useState([]);
+    const [roast, setRoast] = useState([]);
 
     const db = getFirestore(app);
 
     const newestBtn = useRef();
     const oldestBtn = useRef();
     const likesBtn = useRef()
+
+    const rabbitBtn = useRef();
+    const snailBtn = useRef();
+    const turtleBtn = useRef();
 
 
     const getRecipes = async(sorting) => {
@@ -50,11 +55,11 @@ export const RecipeList = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     
-    function setFilter(el, name) {
+    function setFilter(el, name, filter) {
         if(el.checked) {
-            setFilters(prvState => [...prvState, name])
+            filter === 'method' ? setMethod(prvState => [...prvState, name]) : setRoast(prvState => [...prvState, name]);
         } else {
-            setFilters(prvState => prvState.filter(e => e !== name))
+            filter === 'method' ? setMethod(prvState => prvState.filter(e => e !== name)) : setRoast(prvState => prvState.filter(e => e !== name));
         }
     }
 
@@ -62,10 +67,41 @@ export const RecipeList = () => {
     function generateList(){
                 let filteredArr = [];
 
-                if(filters.length !== 0) {
+
+
+                if(method.length !== 0 || roast.length !== 0 || time.length !== 0) {
                     recipesArr.forEach(e => {
-                        return filters.every(el => Object.values(e.data).includes(el)) ? filteredArr.push(e) : null;
-                    })
+                        let a = e.data.time.split(':');
+                        let toSeconds = (+a[0]) * 60 + (+a[1]); 
+
+                        if(method.length !== 0 && roast.length === 0 && time.length === 0) {
+                            return method.some(r => Object.values(e.data).includes(r)) ? filteredArr.push(e) : null;
+
+                        } else if(method.length === 0 && roast.length !== 0 && time.length === 0) {
+                            return roast.some(r => Object.values(e.data).includes(r)) ? filteredArr.push(e) : null;
+
+                        } else if(method.length === 0 && roast.length === 0 && time.length !== 0) {
+                            return toSeconds >= time[0] && toSeconds <= time[1]  ? filteredArr.push(e) : null;
+
+                        } else if(method.length !== 0 && roast.length !== 0 && time.length === 0) {
+                            return method.some(r => Object.values(e.data).includes(r)) 
+                                && roast.some(r => Object.values(e.data).includes(r)) ? filteredArr.push(e) : null;
+
+                        } else if(method.length !== 0 && roast.length !== 0 && time.length !== 0) {
+                            return method.some(r => Object.values(e.data).includes(r)) 
+                                && roast.some(r => Object.values(e.data).includes(r)) 
+                                && toSeconds >= time[0] && toSeconds <= time[1]  ? filteredArr.push(e) : null;
+
+                        } else if(method.length === 0 && roast.length !== 0 && time.length !== 0) {
+                            return roast.some(r => Object.values(e.data).includes(r)) 
+                                && toSeconds >= time[0] && toSeconds <= time[1]  ? filteredArr.push(e) : null;
+
+                        } else if(method.length !== 0 && roast.length === 0 && time.length !== 0) {
+                            return method.some(r => Object.values(e.data).includes(r)) 
+                                && toSeconds >= time[0] && toSeconds <= time[1]  ? filteredArr.push(e) : null;
+
+                        }
+                    });
                 } else {
                     filteredArr = [...recipesArr]
                 }
@@ -118,10 +154,28 @@ export const RecipeList = () => {
                 
                 for(const e of arr) {
                     if(e === id && document.getElementById(e).checked === true) {
-                        document.getElementById(e).checked = true; 
+                        switch (id) {
+                            case 'snail':
+                                setTime([240, 99999])
+                                break;
+                            case 'turtle':
+                                setTime([120, 240])
+                                break;
+                            case 'rabbit':
+                                setTime([60, 120])
+                                break;
+                            default:
+                                break;
+                        }
+                        document.getElementById(e).checked = true;
+
                     } else {
                         document.getElementById(e).checked = false;
                     }
+                }
+                
+                if(!snailBtn.current.checked && !turtleBtn.current.checked && !rabbitBtn.current.checked) {
+                    setTime([]);
                 }
             }
 
@@ -158,25 +212,25 @@ export const RecipeList = () => {
     
                             <div className="roast-checkbox">
                                 <div>
-                                    <input type="checkbox"  onChange={(e)=>setFilter(e.target, 'light')} id="light-roast"/>
+                                    <input type="checkbox"  onChange={(e)=>setFilter(e.target, 'light', 'roast')} id="light-roast"/>
                                     <label className="l-roast" htmlFor="light-roast">
                                         <span className="bean"></span> Light
                                     </label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" onChange={(e)=>setFilter(e.target, 'medium')} id="medium-roast"/>
+                                    <input type="checkbox" onChange={(e)=>setFilter(e.target, 'medium', 'roast')} id="medium-roast"/>
                                     <label className="m-roast" htmlFor="medium-roast">
                                         <span className="bean"></span> Medium
                                     </label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" onChange={(e)=>setFilter(e.target, 'medium/dark')} id="medium-dark-roast"/>
+                                    <input type="checkbox" onChange={(e)=>setFilter(e.target, 'medium/dark', 'roast')} id="medium-dark-roast"/>
                                     <label className="md-roast" htmlFor="medium-dark-roast">
                                         <span className="bean"></span> Medium/Dark
                                     </label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" onChange={(e)=>setFilter(e.target, 'dark')} id="dark-roast"/>
+                                    <input type="checkbox" onChange={(e)=>setFilter(e.target, 'dark', 'roast')} id="dark-roast"/>
                                     <label className="d-roast" htmlFor="dark-roast">
                                         <span className="bean"></span> Dark
                                     </label>
@@ -189,25 +243,25 @@ export const RecipeList = () => {
     
                             <div className="method-checkbox">
                                 <div>
-                                    <input type="checkbox"  onChange={(e)=>setFilter(e.target, 'chemex')} id="chemex-checkbox"/>
+                                    <input type="checkbox"  onChange={(e)=>setFilter(e.target, 'chemex', 'method')} id="chemex-checkbox"/>
                                     <label htmlFor="chemex-checkbox">
                                         <img src={chemex} alt="chemex"/>
                                     </label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" onChange={(e)=>setFilter(e.target, 'drip')} id="drip-checkbox"/>
+                                    <input type="checkbox" onChange={(e)=>setFilter(e.target, 'drip', 'method')} id="drip-checkbox"/>
                                     <label htmlFor="drip-checkbox">
                                         <img src={drip} alt="drip"/>
                                     </label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" onChange={(e)=>setFilter(e.target, 'aeropress')} id="aeropress-checkbox"/>
+                                    <input type="checkbox" onChange={(e)=>setFilter(e.target, 'aeropress', 'method')} id="aeropress-checkbox"/>
                                     <label htmlFor="aeropress-checkbox">
                                         <img src={aeropress} alt="aeropress"/>
                                     </label>
                                 </div>
                                 <div>
-                                    <input type="checkbox"  onChange={(e)=>setFilter(e.target, 'frenchpress')} id="french-p-checkbox"/>
+                                    <input type="checkbox"  onChange={(e)=>setFilter(e.target, 'frenchpress', 'method')} id="french-p-checkbox"/>
                                     <label htmlFor="french-p-checkbox">
                                         <img src={frenchpress} alt="French press"/>
                                     </label>
@@ -243,19 +297,19 @@ export const RecipeList = () => {
     
                             <div className="time-checkbox">
                                 <div>
-                                    <input type="checkbox" name='time' id="rabbit" onClick={(e)=>unCheck(e.currentTarget.id)}/>
+                                    <input type="checkbox" name='time' ref={rabbitBtn} id="rabbit" onClick={(e)=>unCheck(e.currentTarget.id)}/>
                                     <label htmlFor="rabbit">
                                         <img src={rabbit} alt="fast"/> 1 - 2 min
                                     </label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" name='time' id="turtle" onClick={(e)=>unCheck(e.currentTarget.id)}/>
+                                    <input type="checkbox" name='time' ref={turtleBtn} id="turtle" onClick={(e)=>unCheck(e.currentTarget.id)}/>
                                     <label htmlFor="turtle">
                                         <img src={turtle} alt="slow"/> 2 - 4 min
                                     </label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" name='time' id="snail" onClick={(e)=>unCheck(e.currentTarget.id)}/>
+                                    <input type="checkbox" name='time' ref={snailBtn} id="snail" onClick={(e)=>unCheck(e.currentTarget.id)}/>
                                     <label htmlFor="snail">
                                         <img src={snail} alt="slowest"/> + 4 min
                                     </label>
