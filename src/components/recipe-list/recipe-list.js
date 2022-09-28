@@ -18,12 +18,13 @@ export const RecipeList = () => {
     const [recipesArr, setRecipesArr] = useState([]);
     const [searchBar, setSearchBar] = useState('');
     const [filters, setFilters] = useState([]);
+    const [time, setTime] = useState();
 
     const db = getFirestore(app);
 
     const newestBtn = useRef();
     const oldestBtn = useRef();
-    const likesBtn = useRef();
+    const likesBtn = useRef()
 
 
     const getRecipes = async(sorting) => {
@@ -110,6 +111,18 @@ export const RecipeList = () => {
                             </li>
                         )
                 })
+            }
+
+            function unCheck(id) {
+                const arr = ['turtle', 'rabbit', 'snail'];
+                
+                for(const e of arr) {
+                    if(e === id && document.getElementById(e).checked === true) {
+                        document.getElementById(e).checked = true; 
+                    } else {
+                        document.getElementById(e).checked = false;
+                    }
+                }
             }
 
     return (
@@ -230,19 +243,19 @@ export const RecipeList = () => {
     
                             <div className="time-checkbox">
                                 <div>
-                                    <input type="radio" name='time'  id="rabbit"/>
+                                    <input type="checkbox" name='time' id="rabbit" onClick={(e)=>unCheck(e.currentTarget.id)}/>
                                     <label htmlFor="rabbit">
                                         <img src={rabbit} alt="fast"/> 1 - 2 min
                                     </label>
                                 </div>
                                 <div>
-                                    <input type="radio" name='time'  id="turtle"/>
+                                    <input type="checkbox" name='time' id="turtle" onClick={(e)=>unCheck(e.currentTarget.id)}/>
                                     <label htmlFor="turtle">
                                         <img src={turtle} alt="slow"/> 2 - 4 min
                                     </label>
                                 </div>
                                 <div>
-                                    <input type="radio" name='time'  id="snail"/>
+                                    <input type="checkbox" name='time' id="snail" onClick={(e)=>unCheck(e.currentTarget.id)}/>
                                     <label htmlFor="snail">
                                         <img src={snail} alt="slowest"/> + 4 min
                                     </label>
