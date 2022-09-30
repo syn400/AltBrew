@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom"
-import { React, useEffect, useState, useRef } from 'react'
+import { Link, useSearchParams } from "react-router-dom"
+import { React, useEffect, useState, useRef} from 'react'
 import './recipe-list.scss';
 import chemex from '../../assets/chemex.svg';
 import frenchpress from '../../assets/french-press.svg';
@@ -14,11 +14,14 @@ import { getFirestore, collection, query, orderBy, onSnapshot } from "firebase/f
 
 export const RecipeList = () => {
 
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    
+    const [method, setMethod] = useState([]);
     const [toggleMenu, toggleMenuSet] = useState(false);
     const [recipesArr, setRecipesArr] = useState([]);
-    const [searchBar, setSearchBar] = useState('');
+    const [searchBar, setSearchBar] = useState(searchParams.get('search') !== null ? searchParams.get('search') : '');
     const [time, setTime] = useState([]);
-    const [method, setMethod] = useState([]);
     const [roast, setRoast] = useState([]);
 
     const db = getFirestore(app);
@@ -30,7 +33,6 @@ export const RecipeList = () => {
     const rabbitBtn = useRef();
     const snailBtn = useRef();
     const turtleBtn = useRef();
-
 
     const getRecipes = async(sorting) => {
             const colRef = collection(db, 'recipes');
@@ -66,8 +68,6 @@ export const RecipeList = () => {
 
     function generateList(){
                 let filteredArr = [];
-
-
 
                 if(method.length !== 0 || roast.length !== 0 || time.length !== 0) {
                     recipesArr.forEach(e => {
@@ -187,8 +187,8 @@ export const RecipeList = () => {
                     <h1 className="logo">Alt<span>BREW</span></h1>
                 </Link>
             </header>
-            <form className="searchbar page-2">
-                <input onChange={(e)=>setSearchBar(e.target.value)}/>
+            <form onSubmit={(e) => e.preventDefault()} className="searchbar page-2">
+                <input defaultValue={searchParams.get('search') !== null ? searchParams.get('search') : ''} onChange={(e)=>setSearchBar(e.target.value)}/>
             </form>
             <form onClick={() => {
                     newestBtn.current.checked = false;
