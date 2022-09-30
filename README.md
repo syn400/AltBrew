@@ -1,4 +1,4 @@
-# AltBrew v1.1.0
+# AltBrew v1.0.0
 Altbrew is a web application which is built by using React and firebase firestore Api.
 
 
