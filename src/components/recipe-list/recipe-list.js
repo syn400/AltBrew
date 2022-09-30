@@ -34,6 +34,19 @@ export const RecipeList = () => {
     const snailBtn = useRef();
     const turtleBtn = useRef();
 
+    useEffect(() => {
+        if(searchParams.get('category') !== null) {
+            const category = searchParams.get('category');
+
+            if(category === 'frenchpress') {
+                setFilter(document.getElementById(`french-p-checkbox`), 'frenchpress', 'method');
+            } else {
+                setFilter(document.getElementById(`${category}-checkbox`), category, 'method');
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
     const getRecipes = async(sorting) => {
             const colRef = collection(db, 'recipes');
 
@@ -243,25 +256,25 @@ export const RecipeList = () => {
     
                             <div className="method-checkbox">
                                 <div>
-                                    <input type="checkbox"  onChange={(e)=>setFilter(e.target, 'chemex', 'method')} id="chemex-checkbox"/>
+                                    <input type="checkbox" defaultChecked={searchParams.get('category') === 'chemex'} onChange={(e)=>setFilter(e.target, 'chemex', 'method')} id="chemex-checkbox"/>
                                     <label htmlFor="chemex-checkbox">
                                         <img src={chemex} alt="chemex"/>
                                     </label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" onChange={(e)=>setFilter(e.target, 'drip', 'method')} id="drip-checkbox"/>
+                                    <input type="checkbox" defaultChecked={searchParams.get('category') === 'drip'} onChange={(e)=>setFilter(e.target, 'drip', 'method')} id="drip-checkbox"/>
                                     <label htmlFor="drip-checkbox">
                                         <img src={drip} alt="drip"/>
                                     </label>
                                 </div>
                                 <div>
-                                    <input type="checkbox" onChange={(e)=>setFilter(e.target, 'aeropress', 'method')} id="aeropress-checkbox"/>
+                                    <input type="checkbox" defaultChecked={searchParams.get('category') === 'aeropress'} onChange={(e)=>setFilter(e.target, 'aeropress', 'method')} id="aeropress-checkbox"/>
                                     <label htmlFor="aeropress-checkbox">
                                         <img src={aeropress} alt="aeropress"/>
                                     </label>
                                 </div>
                                 <div>
-                                    <input type="checkbox"  onChange={(e)=>setFilter(e.target, 'frenchpress', 'method')} id="french-p-checkbox"/>
+                                    <input type="checkbox" defaultChecked={searchParams.get('category') === 'frenchpress'}  onChange={(e)=>setFilter(e.target, 'frenchpress', 'method')} id="french-p-checkbox"/>
                                     <label htmlFor="french-p-checkbox">
                                         <img src={frenchpress} alt="French press"/>
                                     </label>
