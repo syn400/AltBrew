@@ -1,4 +1,4 @@
-import { Link, useSearchParams } from "react-router-dom"
+import { Link, useSearchParams, useNavigate } from "react-router-dom"
 import { React, useEffect, useState, useRef} from 'react'
 import './recipe-list.scss';
 import chemex from '../../assets/chemex.svg';
@@ -15,7 +15,6 @@ import { getFirestore, collection, query, orderBy, onSnapshot } from "firebase/f
 export const RecipeList = () => {
 
     const [searchParams, setSearchParams] = useSearchParams();
-
     
     const [method, setMethod] = useState([]);
     const [toggleMenu, toggleMenuSet] = useState(false);
@@ -25,6 +24,7 @@ export const RecipeList = () => {
     const [roast, setRoast] = useState([]);
 
     const db = getFirestore(app);
+    const history = useNavigate();
 
     const newestBtn = useRef();
     const oldestBtn = useRef();
