@@ -2,14 +2,14 @@ import { initializeApp } from 'firebase/app';
 import {getAuth } from 'firebase/auth'
 
 const firebaseConfig = {
-    apiKey: "AIzaSyCXjLqmVSS1X7oDQ_zvK8ZLhoMsl2xJXSI",
-    authDomain: "altbrew-15a03.firebaseapp.com",
-    databaseURL: "https://altbrew-15a03-default-rtdb.firebaseio.com",
-    projectId: "altbrew-15a03",
-    storageBucket: "altbrew-15a03.appspot.com",
-    messagingSenderId: "835564993768",
-    appId: "1:835564993768:web:9bd2b89df74736cc785d5d",
-    measurementId: "G-761WS9YZDH"
+    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+    databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
+    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.REACT_APP_FIREBASE_APP_ID,
+    measurementId: process.env.REACT_APP_FIREBASE_MEASURMENT_ID
   };
 
 const app = initializeApp(firebaseConfig);
