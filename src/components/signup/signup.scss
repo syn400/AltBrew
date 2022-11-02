@@ -8,6 +8,45 @@ header.reg-page {
     }
 }
 
+.confirmation-msg {
+    margin-top: 5rem;
+    color: $main-color;
+
+    h1 {
+        font-size: 2rem;
+        font-weight: 600;
+
+    }
+    h2 {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    p {
+        font-size: 1.2rem;
+        margin-top: .2rem;
+    }
+
+    div {
+        margin-bottom: 5rem;
+    }
+
+    a {
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 2rem;
+        background-color: $aeropress-bg;
+        color: $icon-color;
+        font-weight: 500;
+        text-decoration: none;
+
+        transition: background-color .2s;
+        &:hover {
+            background-color: $drip-bg;
+        }
+    }
+}
+
 .reg-form {
     display: flex;
     flex-direction: column;
@@ -28,7 +67,6 @@ header.reg-page {
         padding: .5rem 1rem;
         border: none;
         border-radius: 4rem;
-        // margin-bottom: 1.8rem;
 
         &:focus {
             outline-width: 0;

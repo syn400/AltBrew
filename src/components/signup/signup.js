@@ -16,6 +16,8 @@ export const SignUp = () => {
     const [nameErr, setNameErr] = useState('');
     const [emailErr, setEmailErr] = useState('');
 
+    const [isSuccess, setIsSuccess] = useState(false);
+
     function handleSubmit(e) {
         e.preventDefault()
         signup(emailRef.current.value, passwordRef.current.value, passwordConfirmRef.current.value, nicknameRef.current.value);
@@ -61,18 +63,16 @@ export const SignUp = () => {
             setPasswordErr('Password should be 8 characters long and contain at least 1 uppercase, 1 lowercase and 1 number')
         } else {
             setPasswordErr('')
+            if(passwordErr === '' && emailErr === '' && nameErr === '') {
+                createUserWithEmailAndPassword(auth, email, password)
+                    .then(() => {
+                        setIsSuccess(true)
+                    })
+                    .catch((error) => {
+                        return error.code === 'auth/email-already-in-use' ? setEmailErr('Email already in use.') : null;
+                    });
+            }
         }
-
-        if(passwordErr === '' && emailErr === '' && nameErr === '') {
-            createUserWithEmailAndPassword(auth, email, password)
-                .then(() => {
-                    setEmailErr('')
-                })
-                .catch((error) => {
-                    return error.code === 'auth/email-already-in-use' ? setEmailErr('Email already in use.') : null;
-                });
-        }
-
     }
 
   return (
@@ -91,24 +91,38 @@ export const SignUp = () => {
                 </Link> 
             </header>
 
-            <form className='reg-form'> 
-                <label for='nickname'>Nickname</label>
-                <input name='nickname' ref={nicknameRef} type='text'></input>
-                <p className='alert'>{nameErr}</p>
+            {isSuccess ? 
+                <>
+                    <div className='confirmation-msg'>
+                        <div>
+                            <h1>Thank You!</h1>
+                            <h2>Your account was created</h2>
+                            <p>Check your inbox! We sent you a verification email.</p>
+                            <p>If you can't find email from us - check the spam folder</p>
+                        </div>
+                        <Link to='/'>Back to main page</Link>
+                    </div>
+                </>
+                 :
+                <form className='reg-form'> 
+                    <label for='nickname'>Nickname</label>
+                    <input name='nickname' style={{background: nameErr !== '' ? '#bf1a1a36' : null}} ref={nicknameRef} onChange={()=> setNameErr('')} type='text'></input>
+                    <p className='alert'>{nameErr}</p>
 
-                <label for='email'>Email address</label>
-                <input name='email' ref={emailRef} type='email'></input>
-                <p className='alert'>{emailErr}</p>
+                    <label for='email'>Email address</label>
+                    <input name='email' style={{background: emailErr !== '' ? '#bf1a1a36' : null}} ref={emailRef} onChange={()=> setEmailErr('')} type='email'></input>
+                    <p className='alert'>{emailErr}</p>
 
-                <label for='password'>Set your password</label>
-                <input name='password' ref={passwordRef} type='password'></input>
-                <p className='alert'>{passwordErr}</p>
+                    <label for='password'>Set your password</label>
+                    <input name='password' style={{background: passwordErr !== '' ? '#bf1a1a36' : null}} ref={passwordRef} onChange={()=> setPasswordErr('')} type='password'></input>
+                    <p className='alert'>{passwordErr}</p>
 
-                <label for='password'>Repeat password</label>
-                <input name='password' ref={passwordConfirmRef} type='password'></input>
+                    <label for='password'>Repeat password</label>
+                    <input name='password' style={{background: passwordErr !== '' ? '#bf1a1a36' : null}} ref={passwordConfirmRef} type='password'></input>
 
-                <input type='submit' onClick={(e)=> handleSubmit(e)} value='Sign Up!'/>
-            </form>
+                    <input type='submit' onClick={(e)=> handleSubmit(e)} value='Sign Up!'/>
+                </form>
+            }
         </div>
 
 
