@@ -4,6 +4,7 @@ import chemex from '../../../assets/chemex.svg'
 import frenchpress from '../../../assets/french-press.svg'
 import drip from '../../../assets/drip-v60.svg'
 import aeropress from '../../../assets/aeropress.svg'
+import { motion } from "framer-motion"
 
 export const Body = () => {
     const [searchValue, setSearchValue] = useState();
@@ -15,7 +16,10 @@ export const Body = () => {
     }
 
   return (
-    <div className="container">
+    <motion.div 
+        initial={{ opacity: .5 }}
+        animate={{ opacity: 1 }}
+        className="container">
         <div className="content">
             <header>
                 <h1 className="logo">Alt<span>BREW</span></h1>
@@ -58,6 +62,6 @@ export const Body = () => {
             </form>
         </div>
         <footer>© 2022 Konrad Synowiec - syn400, Wszystkie prawa zastrzeżone.</footer> 
-    </div>
+    </motion.div>
   )
 }

@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import './signup.scss';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import {auth} from '../../firebase'
+import happyCoffee from '../../assets/happy-coffee.svg';
+import { motion } from "framer-motion"
 
 
 
@@ -84,7 +86,10 @@ export const SignUp = () => {
             <span className="bg-3"></span>
             <span className="bg-4"></span>
         </div>
-        <div className="content">
+        <motion.div 
+            initial={{ opacity: .5 }}
+            animate={{ opacity: 1 }} 
+            className="content">
             <header className='reg-page'>
                 <Link to='/'>
                     <h1 className="logo reg-page">Alt<span>BREW</span></h1>
@@ -93,15 +98,20 @@ export const SignUp = () => {
 
             {isSuccess ? 
                 <>
-                    <div className='confirmation-msg'>
+                    <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className='confirmation-msg'>
                         <div>
                             <h1>Thank You!</h1>
                             <h2>Your account was created</h2>
+                            <img
+                            src={happyCoffee} alt="Happy coffee" />
                             <p>Check your inbox! We sent you a verification email.</p>
                             <p>If you can't find email from us - check the spam folder</p>
                         </div>
                         <Link to='/'>Back to main page</Link>
-                    </div>
+                    </motion.div>
                 </>
                  :
                 <form className='reg-form'> 
@@ -123,7 +133,7 @@ export const SignUp = () => {
                     <input type='submit' onClick={(e)=> handleSubmit(e)} value='Sign Up!'/>
                 </form>
             }
-        </div>
+        </motion.div>
 
 
         <footer>© 2022 Konrad Synowiec - syn400, Wszystkie prawa zastrzeżone.</footer> 

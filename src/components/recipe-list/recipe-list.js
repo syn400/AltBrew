@@ -10,6 +10,7 @@ import rabbit from '../../assets/rabbit.svg';
 import snail from '../../assets/snail.svg';
 import app from '../../firebase';
 import { getFirestore, collection, query, orderBy, onSnapshot } from "firebase/firestore";
+import { motion } from "framer-motion"
 
 
 export const RecipeList = () => {
@@ -193,7 +194,10 @@ export const RecipeList = () => {
             }
 
     return (
-        <div className="container">
+        <motion.div 
+        initial={{ opacity: .5 }}
+        animate={{ opacity: 1 }}
+        className="container">
         <div className="content">
             <header className="page-2">
                 <Link to="/">
@@ -335,6 +339,6 @@ export const RecipeList = () => {
             </section>
         </div>
         <footer>© 2022 Konrad Synowiec - syn400, Wszystkie prawa zastrzeżone.</footer> 
-    </div>
+    </motion.div>
     )
 }

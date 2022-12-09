@@ -9,7 +9,7 @@ header.reg-page {
 }
 
 .confirmation-msg {
-    margin-top: 5rem;
+    margin-top: 2rem;
     color: $main-color;
 
     h1 {
@@ -17,9 +17,13 @@ header.reg-page {
         font-weight: 600;
 
     }
+
     h2 {
         font-size: 1.5rem;
-        margin-bottom: 2rem;
+    }
+
+    img {
+        width: 25vh;
     }
 
     p {
@@ -28,7 +32,7 @@ header.reg-page {
     }
 
     div {
-        margin-bottom: 5rem;
+        margin-bottom: 4rem;
     }
 
     a {
@@ -91,5 +95,14 @@ header.reg-page {
         padding-top: .4rem;
         height: 2.2rem;
         width: 26rem;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .confirmation-msg {
+        p {
+            font-size: 1rem;
+            padding: 0 2rem;
+        }
     }
 }
