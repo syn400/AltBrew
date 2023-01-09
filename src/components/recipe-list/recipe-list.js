@@ -11,12 +11,14 @@ import snail from '../../assets/snail.svg';
 import app from '../../firebase';
 import { getFirestore, collection, query, orderBy, onSnapshot } from "firebase/firestore";
 import { motion } from "framer-motion"
+import sadCoffee from '../../assets/sad-coffee.svg';
+import { LazyLoadImage } from "react-lazy-load-image-component"
 
 
 export const RecipeList = () => {
 
     const [searchParams, setSearchParams] = useSearchParams();
-    
+    const [isLoading, setIsLoading] = useState(true);
     const [method, setMethod] = useState([]);
     const [toggleMenu, toggleMenuSet] = useState(false);
     const [recipesArr, setRecipesArr] = useState([]);
@@ -55,12 +57,14 @@ export const RecipeList = () => {
                 const getDocuments = onSnapshot(colRef, (snapshot) => {
                     const docArr = snapshot.docs.map((doc) => ( { data: doc.data(), id: doc.id}));
                     setRecipesArr(docArr.sort(() => Math.random() - 0.5));
+                    setIsLoading(false);
                 });
                 return getDocuments;
             } else {
                 const q = query(colRef, sorting);
                 const getDocuments = onSnapshot(q, (snapshot) => {
                     setRecipesArr(snapshot.docs.map((doc) => ({ data: doc.data(), id: doc.id})))
+                    setIsLoading(false);
                 });
                 return getDocuments;
             }
@@ -122,45 +126,64 @@ export const RecipeList = () => {
                 
                 const searchArr = filteredArr.filter(e => e.data.title.toLowerCase().includes(searchBar.toLowerCase()) || e.data.description.toLowerCase().includes(searchBar.toLowerCase()) || e.data.author.toLowerCase().includes(searchBar.toLowerCase()));
 
-                return (searchBar !== '' ? searchArr : filteredArr).map( el => {
-                    function categoryImage () {
-                        switch (el.data.category) {
-                            case "aeropress":
-                                return aeropress
-                            case "chemex":
-                                return chemex
-                            case "frenchpress":
-                                return frenchpress
-                            case "drip":
-                                return drip
-                            default:
-                                return chemex
-                    }}
-
-                        return (
-                            <li key={el.id} className="recipe">
-                                <div className="recipe-info">
-                                    <p className="username">
-                                        <i className="fa-solid fa-user"></i><span>{el.data.author}</span>
-                                    </p>
-            
-                                    <div className="info">
-                                        <div className="likes">
-                                            <i className="fa-regular fa-heart"></i>
-                                            <span> {el.data.likes}</span>
+                if(isLoading) {
+                    return (
+                        <div className="container">
+                            <span className="loader"></span>
+                        </div>
+                    )
+                } else if(searchArr.length === 0) {
+                    return (
+                        <div className="container">
+                            <LazyLoadImage className="sadCoffee" src={sadCoffee} alt="sad coffee" />
+                            <p>Sorry.. Nothing found</p>
+                        </div>
+                    )
+                } else {
+                    return (searchBar !== '' ? searchArr : filteredArr).map( el => {
+                        function categoryImage () {
+                            switch (el.data.category) {
+                                case "aeropress":
+                                    return aeropress
+                                case "chemex":
+                                    return chemex
+                                case "frenchpress":
+                                    return frenchpress
+                                case "drip":
+                                    return drip
+                                default:
+                                    return chemex
+                        }}
+    
+                            return (
+                                <motion.li 
+    
+                                 key={el.id} className="recipe">
+                                    <div className="recipe-info">
+                                        <p className="username">
+                                            <i className="fa-solid fa-user"></i><span>{el.data.author}</span>
+                                        </p>
+                
+                                        <div className="info">
+                                            <div className="likes">
+                                                <i className="fa-regular fa-heart"></i>
+                                                <span> {el.data.likes}</span>
+                                            </div>
+                                            <div className="time">
+                                                <p>{el.data.time}</p>
+                                            </div>
+                                            <img src={categoryImage()} alt={el.data.category}/>
                                         </div>
-                                        <div className="time">
-                                            <p>{el.data.time}</p>
-                                        </div>
-                                        <img src={categoryImage()} alt={el.data.category}/>
                                     </div>
-                                </div>
-            
-                                <h2>{el.data.title}</h2>
-                                <p>{el.data.description}</p>
-                            </li>
-                        )
-                })
+                
+                                    <h2>{el.data.title}</h2>
+                                    <p>{el.data.description}</p>
+                                </motion.li>
+                            )
+                    })
+
+                }
+
             }
 
             function unCheck(id) {
@@ -217,7 +240,7 @@ export const RecipeList = () => {
             </form>
             <section className="list-content" >
                 <ul className="recipe-list">
-                {generateList()}
+                    {generateList()}
                 </ul>
                 <div className={toggleMenu ? "filters" : "filters mobile"}>
                     <div className="mobile-show" onClick={()=>toggleMenuSet(!toggleMenu)}>

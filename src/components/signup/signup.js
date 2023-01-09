@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import './signup.scss';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import {auth} from '../../firebase'
-import happyCoffee from '../../assets/happy-coffee.svg';
 import { motion } from "framer-motion"
+import happyCoffee from '../../assets/happy-coffee.svg';
+import { LazyLoadImage } from "react-lazy-load-image-component"
 
 
 
@@ -105,8 +106,7 @@ export const SignUp = () => {
                         <div>
                             <h1>Thank You!</h1>
                             <h2>Your account was created</h2>
-                            <img
-                            src={happyCoffee} alt="Happy coffee" />
+                            <LazyLoadImage src={happyCoffee} alt="Happy coffee" />
                             <p>Check your inbox! We sent you a verification email.</p>
                             <p>If you can't find email from us - check the spam folder</p>
                         </div>
